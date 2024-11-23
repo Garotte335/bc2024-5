@@ -30,6 +30,16 @@ app.get('/notes/:noteName', (req, res) => {
     res.send(noteContent);
   });
 
+  app.put('/notes/:noteName', express.text(), (req, res) => {
+    const notePath = path.join(cacheDir, req.params.noteName + '.txt');
+    if (!fs.existsSync(notePath)) {
+      return res.status(404).send('Not found');
+    }
+    fs.writeFileSync(notePath, req.body);
+    res.send('Note updated');
+  });
+
+
 // Запуск сервера
 app.listen(options.port, options.host, () => {
   console.log(`Сервер запущено на http://${options.host}:${options.port}`);
